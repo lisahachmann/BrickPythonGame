@@ -8,6 +8,19 @@ purple = (238,130,238)
 white = (0,0,0)
 
 # collision between ball and wall different between ball and bottom wall, ball and brick
+class Nonmoving_brick(pygame.sprite.Sprite):
+	def __init__(self, color):
+		super(Nonmoving_brick, self).__init__()
+		self.width = 80
+		self.height = 30
+		width = self.width
+		height = self.height
+		self.image = pygame.Surface([width, height])
+		self.image.fill(red)
+		self.rect = self.image.get_rect()
+	#def draw_bricks(self):
+		rect = pygame.Rect((80,0),(80,30))
+		pygame.draw.rect(self.image, red, rect, 2)
 
 class Ball(pygame.sprite.Sprite):
 	def __init__(self,color):
@@ -18,23 +31,17 @@ class Ball(pygame.sprite.Sprite):
 		width = self.width
 		height = self.height
 
-
-
 		self.image = pygame.Surface([width, height])
-		# circle = pygame.Surface([width,height])
-		# circle = circle.convert()
+
 		self.image.fill(purple)
 		self.image.set_colorkey(purple)
 		self.rect = self.image.get_rect()
 		pygame.draw.ellipse(self.image, color, [0,0,width, height])
-		# circle.set_colorkey(circle.get_at((0,0)),pygame.RLEACCEL)
-		
 
 		self.rect = self.image.get_rect()
 
 		self.screenheight = pygame.display.get_surface().get_height()
 		self.screenwidth = pygame.display.get_surface().get_width()
-
 		# self.x = 320
 		# self.y = 400
 
@@ -118,8 +125,9 @@ moving_things = pygame.sprite.Group()
 moving_things.add(ball)
 moving_things.add(player)
 
-# to_be_broken = pygame.sprite.Group()
-# to_be_broken.add(Nonmoving_brick)
+nonmoving_bricks = Nonmoving_brick(red)
+to_be_broken = pygame.sprite.Group()
+to_be_broken.add(nonmoving_bricks)
 
 
 
@@ -162,6 +170,7 @@ while exit_program != True:
 
 	screen.fill(purple)
 	moving_things.draw(screen)
+	to_be_broken.draw(screen)
 	pygame.display.flip()
 
 
