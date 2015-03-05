@@ -9,6 +9,31 @@ white = (0,0,0)
 
 # collision between ball and wall different between ball and bottom wall, ball and brick
 
+class Nonmoving_brick(pygame.sprite.Sprite):
+	def __init__(self, color, xpos, ypos):
+		super(Nonmoving_brick, self).__init__()
+		self.width = 80
+		self.height = 30
+		width = self.width
+		height = self.height
+
+		self.image = pygame.Surface([width, height])
+		self.image.fill((red))	
+
+		self.rect = self.image.get_rect()
+		self.screenheight = pygame.display.get_surface().get_height()
+		self.screenwidth = pygame.display.get_surface().get_width()
+
+		self.rect.x = xpos
+		self.rect.y = ypos
+
+		# self.image = pygame.Surface([width, height])
+		# self.image.fill(red)
+		# self.rect = self.image.get_rect()
+		# #def draw_bricks(self):
+		# rect = pygame.Rect((80,0),(80,30))
+		# pygame.draw.rect(self.image, red, rect, 2)
+
 class Ball(pygame.sprite.Sprite):
 	def __init__(self,color):
 		super(Ball, self).__init__()
@@ -19,20 +44,15 @@ class Ball(pygame.sprite.Sprite):
 		height = self.height
 
 		self.image = pygame.Surface([width, height])
-		# circle = pygame.Surface([width,height])
-		# circle = circle.convert()
 		self.image.fill(purple)
 		self.image.set_colorkey(purple)
 		self.rect = self.image.get_rect()
-		pygame.draw.ellipse(self.image, color, [0,0,width, height])
-		# circle.set_colorkey(circle.get_at((0,0)),pygame.RLEACCEL)
-		
+		pygame.draw.ellipse(self.image, color, [0,0,width, height])		
 
 		self.rect = self.image.get_rect()
 
 		self.screenheight = pygame.display.get_surface().get_height()
 		self.screenwidth = pygame.display.get_surface().get_width()
-
 		# self.x = 320
 		# self.y = 400
 
@@ -56,12 +76,13 @@ class Ball(pygame.sprite.Sprite):
 		self.x += math.sin(direction_rad)
 		self.y += math.cos(direction_rad)
 
-		if self.y < self.height:
-			self.y = height
-			self.direction = random.randrange(-45,45)
-		if self.y > self.screenheight:
-			self.y = height
+		if self.y < 0: # this is the top!
+			self.y = 0
 			self.direction = (self.direction + 90)%360.0
+		if self.y > self.screenheight: # this is the bottom!
+			self.direction = (self.direction - 90)%360.0
+			self.y = self.screenheight - self.width
+
 		self.rect.x = self.x
 		self.rect.y = self.y
 
@@ -119,10 +140,16 @@ moving_things = pygame.sprite.Group()
 moving_things.add(ball)
 moving_things.add(player)
 
-# to_be_broken = pygame.sprite.Group()
-# to_be_broken.add(Nonmoving_brick)
+# nonmoving_bricks = Nonmoving_brick(red, 60, 40)
 
+BRICKS = []
+for i in range(0,5):
+	non_moving_brick = Nonmoving_brick(red, 90 * i, 60 )
+	BRICKS.append(non_moving_brick)
 
+to_be_broken = pygame.sprite.Group()
+# to_be_broken.add(nonmoving_bricks)
+to_be_broken.add(BRICKS)
 
 score = 0 
 
@@ -130,13 +157,10 @@ clock = pygame.time.Clock()
 done = False
 exit_program = False
 while exit_program != True:
-	clock.tick(30)
+	clock.tick(100)
 
 	pygame.display.update()
 	screen.blit(Background, (0,0))
-	# my_particles = []
-	# my_particles.clear(screen, Background)
-
 
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
@@ -153,16 +177,16 @@ while exit_program != True:
 		screen.blit(text, textpos)
 
 	if pygame.sprite.spritecollide(player, balls, False):
-
-		# ball.y = 40
 		ball.bounce()
 		score +=1
 
-	# if pygame.sprite.spritecollide(ball,nonmoving_bricks,True):
-	
+	if pygame.sprite.spritecollide(ball,to_be_broken,True):
+		ball.bounce()
+		score+=1
 
 	screen.fill(purple)
 	moving_things.draw(screen)
+	to_be_broken.draw(screen)
 	pygame.display.flip()
 
 
