@@ -1,0 +1,17 @@
+Brick Breakers to do: 
+March 4 -->
+Fix the font bug
+Display score
+Double check the coordinates (in self direction in ball update)
+Lisa needs to read more on Sprite 
+Maggie will comment it the code so lisa can learn. 
+Add more levels (see how) 
+Fix issues with green guy and the ball
+Bottom Dies
+
+Stretch/extra:
+More balls appear!
+Random color
+Random/score?
+Galaxy image background
+

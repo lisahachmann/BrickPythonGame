@@ -15,12 +15,13 @@ class Nonmoving_brick(pygame.sprite.Sprite):
 		self.height = 30
 		width = self.width
 		height = self.height
-		self.image = pygame.Surface([width, height])
-		self.image.fill(red)
-		self.rect = self.image.get_rect()
-	#def draw_bricks(self):
-		rect = pygame.Rect((80,0),(80,30))
-		pygame.draw.rect(self.image, red, rect, 2)
+		for i in range(5):
+			rect = pygame.Rect((i*80,0),(80,30))
+			self.image = pygame.Surface([width, height])
+			self.image.fill(red)
+			self.rect = self.image.get_rect()
+
+			pygame.draw.rect(self.image, red, rect, 2)
 
 class Ball(pygame.sprite.Sprite):
 	def __init__(self,color):
@@ -92,7 +93,7 @@ class PlayerBrick(pygame.sprite.Sprite):
 		self.screenheight = pygame.display.get_surface().get_height()
 		self.screenwidth = pygame.display.get_surface().get_width()
 
-		self.rect.x = 320
+		self.rect.x = 400
 		self.rect.y = 400
 
 	def update(self):
