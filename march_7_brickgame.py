@@ -8,19 +8,19 @@ green = (0,255,63)
 purple = (238,130,238)
 black = (0,0,0)
 white = (255, 255, 255)
+blue = (8, 146, 208)
 
 # collision between ball and wall different between ball and bottom wall, ball and brick
 
-class Nonmoving_brick(pygame.sprite.Sprite):
+class Level1Nonmoving_brick(pygame.sprite.Sprite):
 	def __init__(self, color, xpos, ypos):
-		super(Nonmoving_brick, self).__init__()
-		self.width = 80
+		super(Level1Nonmoving_brick, self).__init__()
+		self.width = 77
 		self.height = 30
 		width = self.width
 		height = self.height
-
 		self.image = pygame.Surface([width, height])
-		self.image.fill((red))	
+		self.image.fill((color))	
 
 		self.rect = self.image.get_rect()
 		self.screenheight = pygame.display.get_surface().get_height()
@@ -28,13 +28,6 @@ class Nonmoving_brick(pygame.sprite.Sprite):
 
 		self.rect.x = xpos
 		self.rect.y = ypos
-
-		# self.image = pygame.Surface([width, height])
-		# self.image.fill(red)
-		# self.rect = self.image.get_rect()
-		# #def draw_bricks(self):
-		# rect = pygame.Rect((80,0),(80,30))
-		# pygame.draw.rect(self.image, red, rect, 2)
 
 class Ball(pygame.sprite.Sprite):
 	def __init__(self,color):
@@ -62,7 +55,7 @@ class Ball(pygame.sprite.Sprite):
 
 	def reset(self): # initial random conditions
 		self.x = random.randrange(10,630)
-		self.y = 50.0
+		self.y = 120
 
 		self.direction = random.randrange(-45,45)
 
@@ -80,10 +73,20 @@ class Ball(pygame.sprite.Sprite):
 
 		if self.y < 0: # this is the top!
 			self.y = 0
-			self.direction = (self.direction + 90)%360.0
+			if abs(self.direction - .1) <= math.pi/2.0:
+				a = .2
+			else:
+				a = math.pi - self.direction
+			self.direction = (self.direction + 2*a)%(2*math.pi)
 		if self.y > self.screenheight: # this is the bottom!
-			self.direction = (self.direction - 90)%360.0
-			self.y = self.screenheight - self.width
+			done = True
+			font = pygame.font.Font(None, 60)
+			text = font.render("Game Over", 1, black)
+			textpos = (200, 200)
+			screen.blit(text, textpos)
+			# self.direction = (self.direction - 90)%360.0
+			#self.y = self.screenheight - self.width
+			#pygame.QUIT()
 
 		self.rect.x = self.x
 		self.rect.y = self.y
@@ -141,13 +144,16 @@ moving_things = pygame.sprite.Group()
 moving_things.add(ball)
 moving_things.add(player)
 
-# nonmoving_bricks = Nonmoving_brick(red, 60, 40)
-
 BRICKS = []
-for i in range(0,5):
-	non_moving_brick = Nonmoving_brick(red, 90 * i, 60 )
+for i in range(0,8, 2):
+	non_moving_brick = Level1Nonmoving_brick(red, 80 * i, 60)
+	non_moving_brick2 = Level1Nonmoving_brick(blue, 80 * (i+1), 60)
 	BRICKS.append(non_moving_brick)
-
+	BRICKS.append(non_moving_brick2)
+	non_moving_brick3 = Level1Nonmoving_brick(blue, 80 * i, 93)
+	non_moving_brick4 = Level1Nonmoving_brick(red, 80 * (i+1), 93)	
+	BRICKS.append(non_moving_brick3)
+	BRICKS.append(non_moving_brick4)
 to_be_broken = pygame.sprite.Group()
 # to_be_broken.add(nonmoving_bricks)
 to_be_broken.add(BRICKS)
@@ -164,41 +170,42 @@ exit_program = False
 
 pygame.display.flip()
 while exit_program != True:
-	clock.tick(100)
-	font = pygame.font.Font(None, 36)
-	text = font.render("Score: ", 1, black)
-	textpos = text.get_rect()
+	clock.tick(160)
+
 	screen.blit(Background, (0,0))
-	screen.blit(text,textpos)
-	pygame.display.update()
+
+
+	#pygame.display.update()
+	screen.fill(purple)
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			exit_program = True
-	if score == 10:
+	if score == 5:
 		done = True
 	if not done:
 		player.update()
 		ball.update()
-		screen.blit(text, textpos)
+		#screen.blit(text, textpos)
 	if done:
-		font = pygame.font.Font(None, 40)
-		endtext = font.render("Game Over", 1, black)
-		endtextpos = text.get_rect()
-		screen.blit(endtext, endtextpos)
+		font = pygame.font.Font(None, 60)
+		text = font.render("Congrats!", 1, black)
+		textpos = (200, 200)
+		screen.blit(text, textpos)
 
 	if pygame.sprite.spritecollide(player, balls, False):
 		ball.bounce()
-		score +=1
 
 	if pygame.sprite.spritecollide(ball,to_be_broken,True):
 		ball.bounce()
 		score+=1
 
-	#score_text = RenderText(score_text, "./fonts/newfont.ttf", 20, black)
-	screen.fill(purple)
+
+	font = pygame.font.Font(None, 36)
+	scoreprint = "Score: "+ str(score)
+	text = font.render(scoreprint, 1, black)
+	textpos = (30, 30)
+	screen.blit(text,textpos)
 	moving_things.draw(screen)
-	#RenderText.print_text(score_text, "./fonts/newfont.ttf", 20, black)
-	#score_text.print_text()
 	to_be_broken.draw(screen)
 	pygame.display.flip()
 
