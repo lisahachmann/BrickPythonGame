@@ -73,20 +73,14 @@ class Ball(pygame.sprite.Sprite):
 
 		if self.y < 0: # this is the top!
 			self.y = 0
-			if abs(self.direction - .1) <= math.pi/2.0:
-				a = .2
-			else:
-				a = math.pi - self.direction
-			self.direction = (self.direction + 2*a)%(2*math.pi)
+			self.direction = (180-self.direction)%360
+
 		if self.y > self.screenheight: # this is the bottom!
 			done = True
 			font = pygame.font.Font(None, 60)
 			text = font.render("Game Over", 1, black)
 			textpos = (200, 200)
 			screen.blit(text, textpos)
-			# self.direction = (self.direction - 90)%360.0
-			#self.y = self.screenheight - self.width
-			#pygame.QUIT()
 
 		self.rect.x = self.x
 		self.rect.y = self.y
@@ -144,19 +138,27 @@ moving_things = pygame.sprite.Group()
 moving_things.add(ball)
 moving_things.add(player)
 
-BRICKS = []
-for i in range(0,8, 2):
-	non_moving_brick = Level1Nonmoving_brick(red, 80 * i, 60)
-	non_moving_brick2 = Level1Nonmoving_brick(blue, 80 * (i+1), 60)
-	BRICKS.append(non_moving_brick)
-	BRICKS.append(non_moving_brick2)
-	non_moving_brick3 = Level1Nonmoving_brick(blue, 80 * i, 93)
-	non_moving_brick4 = Level1Nonmoving_brick(red, 80 * (i+1), 93)	
-	BRICKS.append(non_moving_brick3)
-	BRICKS.append(non_moving_brick4)
 to_be_broken = pygame.sprite.Group()
-# to_be_broken.add(nonmoving_bricks)
-to_be_broken.add(BRICKS)
+counting_levels = 5
+
+class Level(pygame.sprite.Sprite):
+	def __init__(self):
+		super(Level, self).__init__()
+	BRICKS = []
+	for i in range(0,8, 2):
+		j = random.randrange(1,4)
+		for k in range(1,j):
+			non_moving_brick = Level1Nonmoving_brick(red, 80 * i, 60*j)
+			non_moving_brick2 = Level1Nonmoving_brick(blue, 80 * (i+1), 60*j)
+			BRICKS.append(non_moving_brick)
+			BRICKS.append(non_moving_brick2)
+
+			non_moving_brick3 = Level1Nonmoving_brick(blue, 80 * i, 93)
+			non_moving_brick4 = Level1Nonmoving_brick(red, 80 * (i+1), 93)	
+			BRICKS.append(non_moving_brick3)
+			BRICKS.append(non_moving_brick4)
+
+			to_be_broken.add(BRICKS)
 
 score = 0 
 
@@ -164,23 +166,17 @@ clock = pygame.time.Clock()
 done = False
 exit_program = False
 
-
-#textpos.centerx = Background.get_rect().centerx
-#Background.blit(text, textpos)
-
 pygame.display.flip()
 while exit_program != True:
 	clock.tick(160)
 
 	screen.blit(Background, (0,0))
 
-
-	#pygame.display.update()
 	screen.fill(purple)
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			exit_program = True
-	if score == 5:
+	if len(to_be_broken) == 0:
 		done = True
 	if not done:
 		player.update()
@@ -191,6 +187,7 @@ while exit_program != True:
 		text = font.render("Congrats!", 1, black)
 		textpos = (200, 200)
 		screen.blit(text, textpos)
+		counting_levels -=1
 
 	if pygame.sprite.spritecollide(player, balls, False):
 		ball.bounce()
@@ -198,7 +195,6 @@ while exit_program != True:
 	if pygame.sprite.spritecollide(ball,to_be_broken,True):
 		ball.bounce()
 		score+=1
-
 
 	font = pygame.font.Font(None, 36)
 	scoreprint = "Score: "+ str(score)
@@ -208,6 +204,13 @@ while exit_program != True:
 	moving_things.draw(screen)
 	to_be_broken.draw(screen)
 	pygame.display.flip()
+
+while counting_levels < 5:
+	if Level == False:
+		level = Level()
+# 	level = Level()
+
+# leveltwo = Level()
 
 
 pygame.quit()
