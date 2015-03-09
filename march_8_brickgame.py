@@ -182,8 +182,10 @@ while exit_program != True:
 	clock.tick(200)
 
 	screen.blit(Background, (0,0))
-
-	screen.fill(purple)
+	galaxyback = pygame.image.load("galaxies.jpg")
+	get_galaxy = galaxyback.get_rect()
+	#screen.fill(galaxyback)
+	screen.blit(galaxyback, get_galaxy)
 
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
@@ -204,7 +206,7 @@ while exit_program != True:
 
 		elif counting_levels == 0:
 			font = pygame.font.Font(None, 60)
-			text = font.render("Congrats! You've Won!", 1, black)
+			text = font.render("Congrats! You've Won!", 1, white)
 			textpos = (80, 200)
 			screen.blit(text, textpos)
 			done = True
@@ -222,7 +224,7 @@ while exit_program != True:
 
 	font = pygame.font.Font(None, 36)
 	scoreprint = "Score: "+ str(score) + "     " + "Level: " + str(CurrentLevel)
-	text = font.render(scoreprint, 1, black)
+	text = font.render(scoreprint, 1, white)
 	textpos = (30, 30)
 	screen.blit(text,textpos)
 	moving_things.draw(screen)
