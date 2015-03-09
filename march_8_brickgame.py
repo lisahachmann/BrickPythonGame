@@ -152,13 +152,13 @@ class Level(pygame.sprite.Sprite):
 		for i in range(0,8, 2):
 			j = random.randrange(1,4)
 			for k in range(1,j):
-				non_moving_brick = Level1Nonmoving_brick(red, 80 * i, 60*j)
-				non_moving_brick2 = Level1Nonmoving_brick(blue, 80 * (i+1), 60*j)
+				non_moving_brick = Level1Nonmoving_brick((random.randint(0,255),random.randint(0,255),random.randint(0,255)), 80 * i, 60*j)
+				non_moving_brick2 = Level1Nonmoving_brick((random.randint(0,255),random.randint(0,255),random.randint(0,255)), 80 * (i+1), 60*j)
 				BRICKS.append(non_moving_brick)
 				BRICKS.append(non_moving_brick2)
 
-				non_moving_brick3 = Level1Nonmoving_brick(blue, 80 * i, 93)
-				non_moving_brick4 = Level1Nonmoving_brick(red, 80 * (i+1), 93)	
+				non_moving_brick3 = Level1Nonmoving_brick((random.randint(0,255),random.randint(0,255),random.randint(0,255)), 80 * i, 93)
+				non_moving_brick4 = Level1Nonmoving_brick((random.randint(0,255),random.randint(0,255),random.randint(0,255)), 80 * (i+1), 93)	
 				BRICKS.append(non_moving_brick3)
 				BRICKS.append(non_moving_brick4)
 
