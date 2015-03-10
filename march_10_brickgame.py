@@ -176,25 +176,30 @@ level.reset_bricks()
 pygame.display.flip()
 counting_levels = 5
 
-# while exit_program == False and home_page == True:
-#  	keys = pygame.key.get_pressed()
-#  	print keys
-#  	print pygame.K_LEFT
-#  	if keys[pygame.K_LEFT]:
-#  		print 'press'
-#  		home_page = False
-#  		exit_program = False
-#  	else:
-# 	 	intro_title = "Brick Breaker"
-# 	 	font = pygame.font.Font(None, 40)
-# 	 	text = font.render(intro_title, 1, white)
-# 	 	textpos = (100, 100)
-# 	 	screen.blit(Background, (0,0))
-# 	 	galaxyback = pygame.image.load("galaxies.jpg")
-# 	 	get_galaxy = galaxyback.get_rect()
-# 	 	#screen.fill(galaxyback)
-# 	 	screen.blit(galaxyback, get_galaxy)
-# 	 	screen.blit(text, textpos)
+while exit_program == False and home_page == True:
+	print "IN HOME PAGE"
+  	keys = pygame.key.get_pressed()
+  	print keys
+  	print pygame.K_UP
+  	if keys[pygame.K_UP]:
+  		print 'press'
+  		home_page = False
+  		exit_program = False
+  	else:
+  		"key not detected"
+ 	 	intro_title = "Brick Breaker"
+ 	 	font = pygame.font.Font(None, 40)
+ 	 	text = font.render(intro_title, 1, white)
+ 	 	textpos = (100, 100)
+ 	 	screen.blit(Background, (0,0))
+ 	 	galaxyback = pygame.image.load("galaxies.jpg")
+ 	 	get_galaxy = galaxyback.get_rect()
+ 	 	#screen.fill(galaxyback)
+ 	 	screen.blit(galaxyback, get_galaxy)
+ 	 	screen.blit(text, textpos)
+ 	 	import time
+ 	 	time.sleep(1)
+ 	 	home_page = False
 
 while exit_program != True: #and home_page != True:
 	clock.tick(200)
