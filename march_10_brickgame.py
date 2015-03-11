@@ -123,6 +123,33 @@ class PlayerBrick(pygame.sprite.Sprite):
 		if self.rect.x < 0:
 			self.rect.x = 0
 
+
+
+#Outside code that uses classes in pygame
+pygame.init()
+#screen initialization
+screen = pygame.display.set_mode([640,480])
+pygame.display.set_caption('Brick Breaker')
+Background = pygame.Surface(screen.get_size())
+#Sprites
+#ball initialization into sprite
+ball = Ball(red)
+balls = pygame.sprite.Group()
+balls.add(ball)
+
+#paddle/playerbrick initialization into sprite
+player = PlayerBrick()
+players = pygame.sprite.Group()
+players.add(player)
+
+#intializes movement of ball and sprite
+moving_things = pygame.sprite.Group()
+moving_things.add(ball)
+moving_things.add(player)
+
+#creates sprite group for bricks
+to_be_broken = pygame.sprite.Group()
+
 class Level(pygame.sprite.Sprite):
 	"""Creates new bricks for each level"""
 	def __init__(self):
@@ -136,11 +163,11 @@ class Level(pygame.sprite.Sprite):
 			#create bricks in every two spots
 			j = random.randrange(1,4)
 			for k in range(1,j):
-				#create random amounts of bricks
+				#create bricks in random places
 				non_moving_brick = Nonmoving_brick((random.randint(0,255),random.randint(0,255),random.randint(0,255)), 80 * i, 60*j)
-				non_moving_brick2 = Nonmoving_brick((random.randint(0,255),random.randint(0,255),random.randint(0,255)), 80 * (i+1), 60*j)
-				non_moving_brick3 = Nonmoving_brick((random.randint(0,255),random.randint(0,255),random.randint(0,255)), 80 * i, 93)
-				non_moving_brick4 = Nonmoving_brick((random.randint(0,255),random.randint(0,255),random.randint(0,255)), 80 * (i+1), 93)	
+				non_moving_brick2 = Nonmoving_brick((random.randint(0,255),random.randint(0,255),random.randint(0,255)), 80 * (i+1), 60*(j))
+				non_moving_brick3 = Nonmoving_brick((random.randint(0,255),random.randint(0,255),random.randint(0,255)), 80 * i, 60*(j+1))
+				non_moving_brick4 = Nonmoving_brick((random.randint(0,255),random.randint(0,255),random.randint(0,255)), 80 * (i+1), 60*(j+1))	
 
 				BRICKS.append(non_moving_brick)
 				BRICKS.append(non_moving_brick2)
@@ -148,28 +175,6 @@ class Level(pygame.sprite.Sprite):
 				BRICKS.append(non_moving_brick4)
 				#add to sprite group
 				to_be_broken.add(BRICKS)
-
-#Outside code that uses classes in pygame
-pygame.init()
-#screen initialization
-screen = pygame.display.set_mode([640,480])
-pygame.display.set_caption('Brick Breaker')
-Background = pygame.Surface(screen.get_size())
-#Sprites
-#ball initialization into sprite
-ball = Ball(red)
-balls = pygame.sprite.Group()
-balls.add(ball)
-#paddle/playerbrick initialization into sprite
-player = PlayerBrick()
-players = pygame.sprite.Group()
-players.add(player)
-#intializes movement of ball and sprite
-moving_things = pygame.sprite.Group()
-moving_things.add(ball)
-moving_things.add(player)
-#creates sprite group for bricks
-to_be_broken = pygame.sprite.Group()
 
 #game startpoints
 score = 0
@@ -183,92 +188,127 @@ level.reset_bricks()
 pygame.display.flip()
 counting_levels = 5
 
-while exit_program == False and home_page == True:
-	print "IN HOME PAGE"
-  	keyboard = pygame.key.get_pressed()
-  	print keyboard
-  	print pygame.K_UP
-  	if keyboard[pygame.K_UP]:
-  		print 'press'
-  		home_page = False
-  		exit_program = False
-  	else:
-  		"key not detected"
- 	 	intro_title = "Brick Breaker"
- 	 	font = pygame.font.Font(None, 40)
+class HomePage(object):
+	def __init__(self):
+		super(HomePage, self).__init__()
+		self.screen = pygame.Surface([640, 480])
+		
+ 	# def update(self):
+		intro_title = "Brick Breaker"
+ 	 	screen.fill((green))
+ 	 	font = pygame.font.Font(None, 100)
  	 	text = font.render(intro_title, 1, white)
  	 	textpos = (100, 100)
  	 	screen.blit(Background, (0,0))
- 	 	galaxyback = pygame.image.load("galaxies.jpg")
- 	 	get_galaxy = galaxyback.get_rect()
- 	 	screen.blit(galaxyback, get_galaxy)
- 	 	screen.blit(text, textpos)
- 	 	import time
- 	 	time.sleep(5)
- 	 	home_page = False
+		time.delay(5000)
+
+#creates sound background
+sound_background = pygame.mixer.Sound('starwarstheme.wav')
+
+# pageHome = HomePage()
 
 while exit_program != True: #and home_page != True:
-	clock.tick(200)
-	screen.blit(Background, (0,0))
-	#creates sound background
-	sound_background = pygame.mixer.Sound('starwarstheme.wav')
-	sound_background.play(-1)
-	#image background
-	galaxyback = pygame.image.load("galaxies.jpg")
-	get_galaxy = galaxyback.get_rect()
-	screen.blit(galaxyback, get_galaxy)
-	for event in pygame.event.get():
-		#be able to exit pygame
-		if event.type == pygame.QUIT:
-			exit_program = True
-	if len(to_be_broken) == 0:
-		#if all bricks have been broken
-		done = True
-	if not done:
-		#keep game updated
-		player.update()
-		ball.update()
-	if done:
-		counting_levels -=1
-		time.delay(1000)
-		score = 0
-		if counting_levels > 0:
-			#go to the next level
-			CurrentLevel += 1
-			done = False
-			level.reset_bricks()
-		elif counting_levels == 0:
-			#you've finished all the levels so display Congrats and finish
-			font = pygame.font.Font(None, 60)
-			text = font.render("Congrats! You've Won!", 1, white)
-			textpos = (80, 200)
-			screen.blit(text, textpos)
+	start_time = time.time()
+	if time.clock() - start_time < 5.0:
+		self.screen = pygame.Surface([640, 480])
+		
+ 	# def update(self):
+		intro_title = "Brick Breaker"
+ 	 	screen.fill((green))
+ 	 	font = pygame.font.Font(None, 100)
+ 	 	text = font.render(intro_title, 1, white)
+ 	 	textpos = (100, 100)
+ 	 	screen.blit(Background, (0,0))
+		# time.delay(5000)
+
+	else:
+		clock.tick(500)
+		sound_background.play(-1)
+		screen.blit(Background, (0,0))
+		#image background
+		galaxyback = pygame.image.load("galaxies.jpg")
+		get_galaxy = galaxyback.get_rect()
+		screen.blit(galaxyback, get_galaxy)
+		for event in pygame.event.get():
+			#be able to exit pygame
+			if event.type == pygame.QUIT:
+				exit_program = True
+
+		if len(to_be_broken) == 0:
+			#if all bricks have been broken
 			done = True
-			counting_levels -= 1
-		else:
-			#this theoretically never happens, but just in case of errors. 
-			time.delay(3000)
-			pygame.QUIT()
+		if not done:
+			#keep game updated
+			player.update()
+			ball.update()
+		if done:
+			counting_levels -=1
+			time.delay(1000)
+			score = 0
+			if counting_levels > 0:
+				#go to the next level
+				CurrentLevel += 1
+				done = False
+				level.reset_bricks()
+			elif counting_levels == 0:
+				#you've finished all the levels so display Congrats and finish
+				font = pygame.font.Font(None, 60)
+				text = font.render("Congrats! You've Won!", 1, white)
+				textpos = (80, 200)
+				screen.blit(text, textpos)
+				done = True
+				counting_levels -= 1
+			else:
+				#this theoretically never happens, but just in case of errors. 
+				time.delay(3000)
+				pygame.QUIT()
 
-	if pygame.sprite.spritecollide(player, balls, False):
-		#When the paddle/player hits the ball
-		ball.bounce()
+		if pygame.sprite.spritecollide(player, balls, False):
+			#When the paddle/player hits the ball
+			ball.bounce()
 
-	if pygame.sprite.spritecollide(ball,to_be_broken,True):
-		#When the ball hits a brick (and brick disappears)
-		ball.bounce()
-		score+=1
-	#Render the Score and Level to the screen during gameplay"
-	font = pygame.font.Font(None, 36)
-	scoreprint = "Score: "+ str(score) + "     " + "Level: " + str(CurrentLevel)
-	text = font.render(scoreprint, 1, white)
-	textpos = (30, 30)
-	screen.blit(text,textpos)
-	#Draw each of these groups
-	moving_things.draw(screen)
-	to_be_broken.draw(screen)
-	pygame.display.flip()
+		if pygame.sprite.spritecollide(ball,to_be_broken,True):
+			#When the ball hits a brick (and brick disappears)
+			ball.bounce()
+			score+=1
+		#Render the Score and Level to the screen during gameplay"
+		font = pygame.font.Font(None, 36)
+		scoreprint = "Score: "+ str(score) + "     " + "Level: " + str(CurrentLevel)
+		text = font.render(scoreprint, 1, white)
+		textpos = (30, 30)
+		screen.blit(text,textpos)
+		#Draw each of these groups
+		moving_things.draw(screen)
+		to_be_broken.draw(screen)
+		pygame.display.flip()
 
 
 
 pygame.quit()
+
+
+
+
+
+# while exit_program == False and home_page == True:
+# 	print "IN HOME PAGE"
+#   	print keyboard
+#   	print pygame.K_UP
+#   	if keyboard[pygame.K_UP]:
+#   		print 'press'
+#   		home_page = False
+#   		exit_program = False
+#   	else:
+#   		"key not detected"
+#  	 	intro_title = "Brick Breaker"
+#  	 	font = pygame.font.Font(None, 40)
+#  	 	text = font.render(intro_title, 1, white)
+#  	 	textpos = (100, 100)
+#  	 	screen.blit(Background, (0,0))
+#  	 	galaxyback = pygame.image.load("galaxies.jpg")
+#  	 	get_galaxy = galaxyback.get_rect()
+#  	 	screen.blit(galaxyback, get_galaxy)
+#  	 	screen.blit(text, textpos)
+#  	 	import time
+#  	 	time.sleep(5)
+#  	 	home_page = False
