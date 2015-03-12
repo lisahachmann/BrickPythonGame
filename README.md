@@ -12,3 +12,6 @@ And the game will start.
 
 To play the game: 
 A new window will pop up and immediately start with a ball moving towards the bricks or player bricks. There will be the Star Wars theme song playing in the background, on loop. To move the player brick, use the arrow keys (left and right) and hit the ball before it reaches the bottom of the screen. If you hit all the bricks successfully then you will move on to the next level. There are 5 levels in total, and to play again after the 5th level, you will need to rerun the program. 
+
+For SoftDes Grading purposes:
+We left all of the versions of our game in the repository so anyone could see how far we came if they wanted to. However, the only version with adequate commenting is the last and final version, final_game.py, and that is the version that should be graded as our group submission for Mini Project 4. The required reflection writeup is named ReflectionsMiniProject4.pdf. 
