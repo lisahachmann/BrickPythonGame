@@ -8,7 +8,6 @@ try to break the bricks at the top of the screen.
 
 import math
 import pygame
-from pygame import mixer
 import random
 import time
 from pygame import *
@@ -62,8 +61,6 @@ class Ball(pygame.sprite.Sprite):
 
 		self.screenheight = pygame.display.get_surface().get_height()
 		self.screenwidth = pygame.display.get_surface().get_width()
-		# self.x = 320
-		# self.y = 400
 
 		self.reset()
 
